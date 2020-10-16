@@ -49,11 +49,12 @@ func init() {
 
 func main() {
 	var (
-		metricsAddr, hydraURL, endpoint, forwardedProto, syncPeriod string
-		hydraPort                                                   int
-		enableLeaderElection                                        bool
+		namespace, metricsAddr, hydraURL, endpoint, forwardedProto, syncPeriod string
+		hydraPort                                                              int
+		enableLeaderElection                                                   bool
 	)
 
+	flag.StringVar(&namespace, "namespace", "", "Namespace to process oauth2clients from.")
 	flag.StringVar(&metricsAddr, "metrics-addr", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&hydraURL, "hydra-url", "", "The address of ORY Hydra")
 	flag.IntVar(&hydraPort, "hydra-port", 4445, "Port ORY Hydra is listening on")
@@ -77,6 +78,7 @@ func main() {
 		MetricsBindAddress: metricsAddr,
 		LeaderElection:     enableLeaderElection,
 		SyncPeriod:         &syncPeriodParsed,
+		Namespace:          namespace,
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
